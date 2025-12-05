@@ -35,5 +35,12 @@ This demonstrates that I understand the difference between the two approaches an
 
 In summary, I intentionally tested one part with the real database and another with mocked dependencies to show my understanding of both concepts.
 
-
+-------------------------
+POST /login
+POST /register
+GET /students?page=1
+GET /students/{id}
+POST /students
+PUT /students/{id}
+DELETE /students/{id}
 

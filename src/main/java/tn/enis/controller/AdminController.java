@@ -24,7 +24,7 @@ public class AdminController {
     public Map<String, String> login(@RequestBody Admin admin) {
         String token = ad.verifLogin(admin.getUsername(), admin.getPassword());
         Map<String, String> response = new HashMap<>();
-        response.put("token", token);  // Angular attend JSON { "token": "xxxxx" }
+        response.put("token", token);  
         return response;
     }
 }

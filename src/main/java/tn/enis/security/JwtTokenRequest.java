@@ -17,10 +17,7 @@ import tn.enis.security.CustomUserDetailsService; // <-- Assurez-vous que cette 
 public class JwtTokenRequest extends OncePerRequestFilter {
 
     private  jwtUsingCreation jwt;
-    // 1. Déclarez le service pour charger les utilisateurs
     private final CustomUserDetailsService userDetailsService; 
-
-    // 2. Modifiez le constructeur pour injecter le CustomUserDetailsService
     public JwtTokenRequest(jwtUsingCreation jwt, CustomUserDetailsService userDetailsService) {
         this.jwt = jwt;
         this.userDetailsService = userDetailsService; 
@@ -39,28 +36,21 @@ public class JwtTokenRequest extends OncePerRequestFilter {
             
             if (jwt.validerToken(token)) {
                 try {
-                    // 3. Extrait le username à partir du token
                     String username = jwt.getUsernameFromToken(token); 
                     
-                    // Vérifie si le contexte de sécurité n'est pas déjà rempli
                     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                         
-                        // 4. Charge les détails de l'utilisateur
                         UserDetails userDetails = userDetailsService.loadUserByUsername(username); 
                         
-                        // 5. Crée le token d'authentification avec l'objet UserDetails et ses autorités
                         UsernamePasswordAuthenticationToken authToken =
                                 new UsernamePasswordAuthenticationToken(
                                         userDetails, 
-                                        null, // Le mot de passe n'est pas nécessaire ici
+                                        null, 
                                         userDetails.getAuthorities());
                         
-                        // 6. Définit l'objet d'authentification dans le contexte
                         SecurityContextHolder.getContext().setAuthentication(authToken);
                     }
                 } catch (Exception e) {
-                    // Gestion d'erreur (token valide mais utilisateur non trouvé, etc.)
-                    // Pour simplifier, on laisse passer sans authentification pour que Spring Security gère le 403/401
                     System.out.println("Erreur d'authentification JWT: " + e.getMessage());
                 }
             }

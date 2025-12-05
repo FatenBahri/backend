@@ -32,24 +32,16 @@ public class SecurityConfigura {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // 1. L'origine de votre frontend Angular
         configuration.setAllowedOrigins(List.of("http://localhost:4200")); 
-        
-        // 2. Méthodes acceptées (OPTIONS est nécessaire pour le preflight)
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); 
-        
-        // 3. En-têtes acceptés (Authorization est vital pour le JWT)
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        
         configuration.setAllowCredentials(true); 
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // Applique la configuration à toutes les routes (/**)
         source.registerCorsConfiguration("/**", configuration); 
         return source;
     }
 
-    // 1. Définit l'encodeur de mot de passe (garder ce bean)
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -57,16 +49,11 @@ public class SecurityConfigura {
 
     
 
-    // 2. Expose l'AuthenticationManager (garder ce bean)
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        // Spring utilise automatiquement le CustomUserDetailsService et le PasswordEncoder
-        // grâce à votre définition de bean 'passwordEncoder()' et votre classe '@Service CustomUserDetailsService'
         return authConfig.getAuthenticationManager();
     }
     
-
-    // 3. La chaîne de filtres de sécurité (garder ce bean)
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     	

@@ -1,46 +1,96 @@
-# Backend Spring Boot Project
+###Backend Spring Boot Project
 
-This is the **Spring Boot backend** of the fullstack application.
+Ceci est le backend Spring Boot de l'application Full-Stack School Management.
 
----
+##1. Comment lancer le projet localement
+Prérequis
 
-## How to run locally
+Java 17 ou supérieur
 
-### Prerequisites
-- [Java 17+](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
-- [Maven](https://maven.apache.org/)
+Maven
 
----
+(Optionnel) Postman pour tester les APIs
 
-### Steps to run locally
+Étapes
 
-1. Open a terminal in the backend folder:
-```bash
+Ouvrir un terminal dans le dossier backend :
 cd path/to/backend
-2. Build the project:mvn clean install
-3.Run the application:mvn spring-boot:run
-4.The backend API will be available at:http://localhost:8089
 
-------------
-## Unit Testing — Explanation
+Construire le projet :
+mvn clean install
 
-For testing the Student Service, I used the real database.
-This is because the service does not handle sensitive data and there are no critical constraints, so the impact is manageable.
+Lancer l’application :
+mvn spring-boot:run
 
-However, the best practice is usually to use mock objects.
-Mocks allow you to avoid modifying real data and isolate the business logic, especially when there are security or integrity constraints.
+L’API backend sera disponible sur :
+http://localhost:8089
 
-For the Admin Service, I used mocks.
-This demonstrates that I understand the difference between the two approaches and can apply the appropriate solution depending on the context.
+(Optionnel) Tester les endpoints avec Postman ou un autre client API.
 
-In summary, I intentionally tested one part with the real database and another with mocked dependencies to show my understanding of both concepts.
+##2. Endpoints API
+Authentification
 
--------------------------
-POST /login
-POST /register
-GET /students?page=1
-GET /students/{id}
-POST /students
-PUT /students/{id}
-DELETE /students/{id}
+POST /login → Se connecter en tant qu’admin et récupérer un JWT
 
+POST /register → Créer un nouvel admin
+
+Gestion des étudiants
+
+GET /students?page=1 → Récupérer tous les étudiants avec pagination
+
+GET /students/{id} → Récupérer un étudiant par ID
+
+POST /students → Créer un nouvel étudiant
+
+PUT /students/{id} → Mettre à jour un étudiant existant
+
+DELETE /students/{id} → Supprimer un étudiant
+
+Remarque : Tous les endpoints étudiants nécessitent un JWT dans le header Authorization :
+Authorization: Bearer <token>
+
+##3. Tests unitaires
+
+StudentService : testé avec la vraie base de données pour vérifier l’intégration complète
+
+AdminService : testé avec des mocks pour isoler la logique et éviter de modifier des données sensibles
+
+Ceci montre la compréhension des deux approches de tests.
+
+##4. Sécurité et validation
+
+Mot de passe hashé avec BCrypt avant stockage
+
+JWT protège tous les endpoints étudiants
+
+Validation DTO avec @NotBlank, @Size, etc.
+
+Limitation des tentatives de login (5 par minute max par username/IP)
+
+##5. Fonctionnalités futures (non implémentées)
+
+Export / import des étudiants en CSV ou Excel
+
+Documentation Swagger / OpenAPI complète
+
+Dockerisation complète (backend + frontend + base de données)
+
+##6. Notes / conseils
+
+Pour tester les données des étudiants, utiliser Postman si le frontend n’est pas fonctionnel
+
+Inclure le JWT dans les headers pour tous les endpoints protégés
+
+Exemple d’Authorization header :
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+##7. Structure du projet
+
+##backend/
+├─ controller → Gestion des requêtes HTTP
+├─ service → Logique métier
+├─ repository → Accès à la base de données
+├─ entity → Entités JPA
+├─ dto → Objets de transfert de données
+├─ security → JWT, authentification et hashing
+└─ test → Tests unitaires
